@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>질문 등록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css"></link>
+</head>
+
+<script type="text/javascript">
+
+window.onload = function() {
+	
+	//목록 버튼 이벤트
+	var btnGoList = document.querySelector('#btnGoList'); 
+	btnGoList.addEventListener("click", function(e){
+			fn_goQnaList();
+	});
+	
+	//수정 버튼 이벤트
+	var btnGoUpdate = document.querySelector('#btnGoUpdate'); 
+	btnGoUpdate.addEventListener("click", function(e){
+			fn_goQnaUpdate();
+	});
+	
+}
+
+function fn_goQnaList(){
+	var frm = document.querySelector('#frmQnaView'); 
+	frm.action = "/qna/list";
+	frm.method = "GET";
+	frm.submit();
+}
+
+function fn_goQnaUpdate(){
+	var frm = document.querySelector('#frmQnaView'); 
+	frm.action = "/qna/insert";
+	frm.method = "GET";
+	frm.submit();
+}
+</script>
+
+<body>
+    <div class="container">
+        <h2>질문 등록</h2>
+        <form id="frmQnaView" name="frm" method="get" action="/qna/insert">
+        	<input type="hidden" name="status" value="wait">
+        	<input type="hidden" name="seq" th:value="${qnaData.seq}">
+        	<input type="hidden" name="email" th:value="${qnaData.queEmail}">
+            <table class="board_detail">
+            	<colgroup>
+	                <col width="15%"/>
+	                <col width="35%"/>
+	                <col width="10%"/>
+	                <col width="24%"/>
+	                <col width="8%"/>
+	                <col width="8%"/>
+	            </colgroup>
+            	<tr>
+                    <td>이메일</td>
+                    <td th:text="${qnaData.queEmail}"></td>
+                    <td>등록 시간</td>
+                    <td th:text="${#temporals.format(qnaData.queDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td>상태</td>
+                    <td th:text="${qnaData.status}"></td>
+                </tr>
+                <tr>
+                    <td>제목</td>
+                    <td colspan="5" th:text="${qnaData.queTitle}"></td>
+                </tr>
+                <tr>
+                	<td>내용</td>
+                    <td colspan="5" >
+                    	<pre th:text="${qnaData.queContent}"></pre>
+                    </td>
+                </tr>
+            </table>
+            <button type="button" id="btnGoUpdate" class="btn">수정</button>
+            <button type="button" id="btnGoList" class="btn">목록</button>
+        </form>
+    </div>
+</body>
+</html>

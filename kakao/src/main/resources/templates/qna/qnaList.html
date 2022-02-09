@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 질문 목록</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<script type="text/javascript">
+
+window.onload = function() {
+	var tableQnaTr = document.querySelectorAll('#tableQna tr'); 
+	[].forEach.call(tableQnaTr,function(tr){ 
+		tr.addEventListener("click", function(e){
+			var seq = tr.getAttribute('id');
+			location.href="/qna/view?seq="+seq;
+		});
+	}); 
+	
+}
+
+</script>
+<body>
+    <div class="container">
+        <h2>내 질문 목록</h2>
+        <table class="board_list" id="tableQna">
+            <colgroup>
+                <col width="15%"/>
+                <col width="*"/>
+                <col width="15%"/>
+                <col width="20%"/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">질문 번호</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">답변 여부</th>
+                    <th scope="col">작성일</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.size(qnaList)} > 0" th:each="list : ${qnaList}" th:id="${list.seq}">
+                    <td ><span th:text="${list.seq}"></span></td>
+                    <td class="title"><span th:text="${list.queTitle}"></span></td>
+                    <td>
+                    	<span th:if="${list.status} == 'wait'">대기중</span>
+                    	<span th:if="${list.status} == 'proc'">할당됨</span>
+                    	<span th:if="${list.status} == 'comp'">답변완료</span>
+                    </td>
+                    <td><span th:text="${#temporals.format(list.queDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+                </tr> 
+                <tr th:unless="${#lists.size(qnaList)} > 0">
+                    <td colspan="4">조회된 결과가 없습니다.</td>
+                </tr>
+                
+            </tbody>
+        </table>
+        <a href="/qna/insert" class="btn">새 질문 등록</a>
+    </div>
+</body>
+</html>
