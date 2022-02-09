@@ -21,7 +21,7 @@ primary key (seq)
 
 
 
-drop table if exists user CASCADE;
+drop table if exists users CASCADE;
 create table users
 (
 user_id varchar(50) not null,
