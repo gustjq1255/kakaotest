@@ -23,7 +23,7 @@ public class QnaController {
         @GetMapping(suffix+"/list")
         public ModelAndView qnalistPage(QnaDto qnaDto) throws Exception {
         	
-        	int i = 10/0;
+//        	int i = 10/0;
         	List<QnaDto> qnaList = qnaService.list(qnaDto);
         	
             ModelAndView mv = new ModelAndView(suffix+"/qnaList");
