@@ -26,14 +26,14 @@ window.onload = function() {
 
 function fn_goQnaList(){
 	var frm = document.querySelector('#frmQnaView'); 
-	frm.action = "/qna/list";
+	frm.action = "/adm/qna/list";
 	frm.method = "GET";
 	frm.submit();
 }
 
 function fn_goQnaUpdate(){
 	var frm = document.querySelector('#frmQnaView'); 
-	frm.action = "/qna/insert";
+	frm.action = "/adm/qna/insert";
 	frm.method = "GET";
 	frm.submit();
 }
