@@ -27,6 +27,7 @@ create table users
 user_id varchar(50) not null,
 user_name varchar(50),
 user_group varchar(50),
+password varchar(50),
 in_date varchar(50),
 in_user_id varchar(50),
 up_date varchar(50),

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import kakao.qna.dto.QnaDto;
+import kakao.qna.entity.QnaEntity;
 import kakao.qna.service.QnaService;
 import kakao.util.StringUtil;
 
@@ -21,10 +22,11 @@ public class QnaController {
         final String suffix = "qna";
 
         @GetMapping(suffix+"/list")
-        public ModelAndView qnalistPage(QnaDto qnaDto) throws Exception {
+        public ModelAndView qnalistPage(QnaEntity qnaEntity) throws Exception {
         	
 //        	int i = 10/0;
-        	List<QnaDto> qnaList = qnaService.list(qnaDto);
+        	qnaEntity.setQueEmail("aa");
+        	List<QnaEntity> qnaList = qnaService.list(qnaEntity);
         	
             ModelAndView mv = new ModelAndView(suffix+"/qnaList");
             mv.addObject("qnaList", qnaList);
