@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kakao.qna.dto.QnaDto;
+import kakao.qna.entity.QnaEntity;
 import kakao.qna.mapper.QnaMapper;
+import kakao.qna.repository.QnaRepository;
 
 @Service
 public class QnaServiceImpl implements QnaService {
@@ -14,10 +16,13 @@ public class QnaServiceImpl implements QnaService {
 	@Autowired
 	private QnaMapper qnaMapper;
 	
+	@Autowired
+	QnaRepository qnaRepository;
+	
 	@Override
-	public List<QnaDto> list(QnaDto qnaDto) throws Exception {
+	public List<QnaEntity> list(QnaEntity qnaEntity) throws Exception {
 		// TODO Auto-generated method stub
-		return qnaMapper.list(qnaDto);
+		return qnaRepository.findAllByQueEmail(qnaEntity.getQueEmail());
 	}
 
 	@Override

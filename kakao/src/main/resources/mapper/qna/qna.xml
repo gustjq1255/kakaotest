@@ -62,15 +62,6 @@
            	<if test='queContent != null and queContent != ""'>
 				, que_content = #{queContent}
            	</if>
-           	<if test='status != null and status != ""'>
-				, status = #{status}
-           	</if>
-           	<if test='ansUserId != null and ansUserId != ""'>
-				, ans_user_id = #{ansUserId}
-	           	, ans_user_name = #{ansUserName}
-	           	, ans_content = #{ansContent}
-	           	, ans_date = #{ansDate}
-           	</if>
            WHERE seq = #{seq}
             	
     </update>

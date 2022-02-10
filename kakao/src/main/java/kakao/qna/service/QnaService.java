@@ -3,10 +3,11 @@ package kakao.qna.service;
 import java.util.List;
 
 import kakao.qna.dto.QnaDto;
+import kakao.qna.entity.QnaEntity;
 
 public interface QnaService {
 	
-	List<QnaDto> list(QnaDto qnaDto) throws Exception;
+	List<QnaEntity> list(QnaEntity qnaEntity) throws Exception;
 	
 	QnaDto data(QnaDto qnaDto) throws Exception;
 	
