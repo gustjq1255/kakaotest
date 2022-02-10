@@ -1,19 +1,42 @@
 package kakao.qna.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
 
 import kakao.qna.dto.QnaDto;
-import kakao.qna.entity.QnaEntity;
+import kakao.qna.entity.Qna;
+import kakao.qna.repository.QnaRepository;
+import lombok.RequiredArgsConstructor;
 
-public interface QnaService {
+@Service
+@RequiredArgsConstructor
+public class QnaService {
 	
-	List<QnaEntity> list(QnaEntity qnaEntity) throws Exception;
+	private final QnaRepository qnaRepository;
 	
-	QnaDto data(QnaDto qnaDto) throws Exception;
+	public QnaDto insert(QnaDto qnaDto) throws Exception {
+		
+		System.out.println(qnaDto.toEntity());
+		QnaDto data = new QnaDto(qnaRepository.save(qnaDto.toEntity()));
+		
+		return data;
+	}
 	
-	int insert(QnaDto qnaDto) throws Exception;
+	public List<QnaDto> list(QnaDto qnaDto) throws Exception {
+		
+		List<Qna> listEntity = qnaRepository.findAllByQueEmail(qnaDto.getQueEmail());
+		
+		List<QnaDto> list = listEntity.stream().map(QnaDto::new).collect(Collectors.toList());
+		
+		return list;
+	}
 	
-	int update(QnaDto qnaDto) throws Exception;
-	
-	void delete(QnaDto qnaDto) throws Exception;
+	public QnaDto data(QnaDto qnaDto) throws Exception {
+		
+		QnaDto data = new QnaDto(qnaRepository.findBySeq(qnaDto.getSeq()));
+		
+		return data;
+	}
 }

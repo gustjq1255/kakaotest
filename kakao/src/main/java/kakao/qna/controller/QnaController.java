@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import kakao.qna.dto.QnaDto;
-import kakao.qna.entity.QnaEntity;
+import kakao.qna.entity.Qna;
 import kakao.qna.service.QnaService;
 import kakao.util.StringUtil;
 
@@ -22,11 +22,11 @@ public class QnaController {
         final String suffix = "qna";
 
         @GetMapping(suffix+"/list")
-        public ModelAndView qnalistPage(QnaEntity qnaEntity) throws Exception {
+        public ModelAndView qnalistPage(QnaDto qnaDto) throws Exception {
         	
 //        	int i = 10/0;
-        	qnaEntity.setQueEmail("aa");
-        	List<QnaEntity> qnaList = qnaService.list(qnaEntity);
+        	qnaDto.setQueEmail("aa");
+        	List<QnaDto> qnaList = qnaService.list(qnaDto);
         	
             ModelAndView mv = new ModelAndView(suffix+"/qnaList");
             mv.addObject("qnaList", qnaList);
@@ -60,12 +60,8 @@ public class QnaController {
         public String qnaInsert(QnaDto qnaDto) throws Exception {
         	System.out.println(qnaDto.getQueContent());
         	int result = 0;
-        	//pk가 null 또는 공백이 아닐경우엔 Update, 그 외엔 Insert를 실행한다.
-        	if(StringUtil.isEmpty(qnaDto.getSeq())) {
-        		result = qnaService.insert(qnaDto);
-        	}else {
-        		result = qnaService.update(qnaDto);
-        	}
+        	
+        	qnaService.insert(qnaDto);
         	
         	System.out.println("result : " + result);
             return "redirect:/qna/list";
