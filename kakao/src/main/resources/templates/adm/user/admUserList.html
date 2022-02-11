@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>내 질문 목록</title>
+    
+</head>
+
+<th:block layout:fragment="content">
+
+<script type="text/javascript">
+
+window.onload = function() {
+	var tableQnaTr = document.querySelectorAll('#tableUser tr'); 
+	[].forEach.call(tableQnaTr,function(tr){ 
+		tr.addEventListener("click", function(e){
+			var userId = tr.getAttribute('id');
+			location.href="/adm/user/view?userId="+userId;
+		});
+	}); 
+	
+}
+
+</script>
+	
+<div class="container">
+    <h2>사용자 목록</h2>
+    <table class="board_list" id="tableUser">
+        <colgroup>
+            <col width="15%"/>
+            <col width="*"/>
+            <col width="15%"/>
+            <col width="20%"/>
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">사용자ID</th>
+                <th scope="col">이 이름</th>
+                <th scope="col">권한</th>
+                <th scope="col">등록일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${#lists.size(userList)} > 0" th:each="list : ${userList}" th:id="${list.userId}">
+                <td ><span th:text="${list.userId}"></span></td>
+                <td class="title"><span th:text="${list.userNm}"></span></td>
+                <td><span th:text="${list.role}"></span></td>
+                <td><span th:text="${#temporals.format(list.inDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+            </tr> 
+            <tr th:unless="${#lists.size(userList)} > 0">
+                <td colspan="4">조회된 결과가 없습니다.</td>
+            </tr>
+            
+        </tbody>
+    </table>
+    <a href="/adm/user/insert" class="btn">계정 등록</a>
+</div>
+
+</th:block>
+</html>

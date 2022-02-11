@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<th:block th:fragment="side">
+
+    <h2>고객 문의</h2>
+	<ul>
+		<li><a href="/qna/index">문의 하기</a></li>
+		<li sec:authorize="isAuthenticated()"><a href="/adm/qna/list">답변 하기</a></li>
+		<li sec:authorize="isAnonymous()"><a href="/login/login">로그인</a></li>
+		<li sec:authorize="hasRole('ADMIN')"><a href="/adm/qna/list">회원관리</a></li>
+	</ul>
+
+</th:block>
+
+</html>

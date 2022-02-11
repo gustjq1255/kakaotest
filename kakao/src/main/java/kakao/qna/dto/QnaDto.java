@@ -2,28 +2,32 @@ package kakao.qna.dto;
 
 import java.time.LocalDateTime;
 
-import kakao.qna.entity.Qna;
+import kakao.entity.Qna;
+import kakao.util.StringUtil;
 import lombok.Data;
 
 @Data
 public class QnaDto {
-	private int seq;
+	
+	private String seq;
 	private String queEmail;
 	private String queTitle;
 	private String queContent;
-	private LocalDateTime queDate;
+	private LocalDateTime queDate = LocalDateTime.now();
 	private String status;
 	private String ansUserId;
 	private String ansUserName;
 	private String ansContent;
-	private LocalDateTime ansDate;
-	private LocalDateTime inDate;
+	private LocalDateTime ansDate = LocalDateTime.now();
+	private LocalDateTime inDate = LocalDateTime.now();
 	private String inUserId;
-	private LocalDateTime upDate;
+	private LocalDateTime upDate = LocalDateTime.now();
 	private String upUserId;
 	
+	public QnaDto(){}
+	
 	public QnaDto(Qna entity) {
-		this.seq = entity.getSeq();
+		this.seq = Integer.toString(entity.getSeq());
 		this.queEmail = entity.getQueEmail();
 		this.queTitle = entity.getQueTitle();
 		this.queContent = entity.getQueContent();
@@ -40,12 +44,27 @@ public class QnaDto {
 	}
 	
 	public Qna toEntity() {
-		return Qna.builder()
-			.seq(seq)
-			.queEmail(queEmail)
-			.queTitle(queTitle)
-			.queContent(queContent)
-			.status(status)
-			.build();
+		
+		if(StringUtil.isEmpty(seq)) {
+			return Qna.builder()
+					.queEmail(queEmail)
+					.queTitle(queTitle)
+					.queContent(queContent)
+					.status(status)
+					.queDate(this.queDate)
+					.inDate(this.queDate)
+					.build();
+		}else {
+			return Qna.builder()
+					.seq(Integer.parseInt(seq))
+					.queEmail(queEmail)
+					.queTitle(queTitle)
+					.queContent(queContent)
+					.status(status)
+					.queDate(this.queDate)
+					.upDate(this.queDate)
+					.build();
+		}
+		
 	}
 }

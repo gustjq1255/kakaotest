@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="layout/layout">
+
+<th:block layout:fragment="content">
+
+<script type="text/javascript">
+
+window.onload = function() {
+	
+	//화면이 로드되면 처리할 이벤트
+	onload_userInsert();
+	
+	//목록 버튼 이벤트
+	var btnGoUserList = document.querySelector('#btnGoUserList'); 
+	btnGoUserList.addEventListener("click", function(e){
+		fn_goUserList();
+	});
+	
+	//저장 버튼 이벤트
+	var btnUserSave = document.querySelector('#btnUserSave'); 
+	btnUserSave.addEventListener("click", function(e){
+		fn_saveUser();
+	});
+	
+}
+
+function fn_goUserList(){
+	var frm = document.querySelector('#frmUserInsert'); 
+	frm.action = "/adm/user/list";
+	frm.method = "GET";
+	frm.submit();
+}
+
+function fn_saveUser(){
+	var frm = document.querySelector('#frmUserInsert'); 
+	
+	var errorElm = null; //필수값체크에 걸린 eliment
+	
+	//필수값 체크 beak기능을 쓰기위해 try catch 적용
+	try{
+		frm.querySelectorAll("input").forEach(function(elm){
+			if(elm.getAttribute("type") != "hidden" && elm.getAttribute("required") == "true"){
+				if(elm.value == ''){
+					errorElm = elm;
+					throw new Error("");
+				}
+			}
+		});
+	} catch(e) {
+		
+	}
+	
+	if(errorElm){
+		alert("필수값을 입력해주세요");
+		errorElm.focus();
+		
+		return;
+	} 
+	
+	var pwd1 = frm.querySelector("#pwd1").value;
+	var pwd2 = frm.querySelector("#pwd2").value;
+	
+	if(pwd1 != ''){
+		if(pwd1 === pwd2){
+			frm.querySelector("#pwd").value = pwd1;
+		}else{
+			alert("비밀번호가 서로 다릅니다");
+			return;
+		}
+	}
+	
+	frm.submit();
+}
+
+function onload_userInsert(){
+	var frm = document.querySelector('#frmUserInsert'); 
+	
+	if(frm.querySelector("#userId").value != ''){ //유저아이디 수정 화면일 경우 비밀번호는 필수값으로 넣지않는다.
+		frm.querySelector("#pwd1").removeAttribute("required");
+		frm.querySelector("#pwd2").removeAttribute("required");
+		
+		frm.action = "/adm/user/update";
+	}
+}
+
+</script>
+
+	
+<div class="container">
+    <h2>사용자 등록</h2>
+    <form id="frmUserInsert" name="frmUserInsert" action = "/adm/user/insert" method="POST">
+    	<input type="hidden" name="pwd" id="pwd">
+        <table class="board_detail">
+        	<tr>
+                <td>사용자 ID</td>
+                <td>
+                	<input type="text" th:if="${#strings.isEmpty(userData?.userId)} "id="userId" name="userId" th:value="${userData?.userId}" required="true">
+                	<input type="text" th:unless="${#strings.isEmpty(userData?.userId)} "id="userId" name="userId" th:value="${userData?.userId}" required="true" readonly="true">
+                </td>
+            </tr>
+            <tr>
+                <td>사용자 성명</td>
+                <td><input type="text" id="userNm" name="userNm" th:value="${userData?.userNm}" required="true"></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="text" id="pwd1" required="true"></td>
+            </tr>
+            <tr>
+                <td>비밀번호 확인</td>
+                <td><input type="text" id="pwd2" required="true"></td>
+            </tr>
+            <tr>
+            	<td>권한명</td>
+                <td><input type="text" id="role" name="role" th:value="${userData?.role}" required="true"></td>
+            </tr>
+        </table>
+        <button type="button" id="btnUserSave" class="btn">저장</button>
+        <button type="button" id="btnGoUserList" class="btn">목록</button>
+    </form>
+</div>
+</th:block>
+
+</html>

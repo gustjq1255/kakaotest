@@ -1,10 +1,8 @@
-package kakao.qna.repository;
+package kakao.entity;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
-
-import kakao.qna.entity.Qna;
 
 public interface QnaRepository extends CrudRepository<Qna, Integer> {
 	

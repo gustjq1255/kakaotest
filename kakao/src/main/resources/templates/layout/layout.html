@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+    <!-- 공통 헤드-->
+    <th:block th:replace="layout/fragments/head :: headFragment"></th:block>
+	<style>
+      #jb-container {
+        width: 1280px;
+        margin: 0px auto;
+        padding: 20px;
+      }
+      #jb-header {
+		width : 100%;
+		height: 50px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #bcbcbc;
+      }
+      #jb-content {
+        width: 75%;
+        padding: 20px;
+        margin-top: 60px;
+        margin-bottom: 20px;
+        float: right;
+      }
+      #jb-sidebar {
+        width: 15%;
+        padding: 20px;
+        margin-top: 80px;
+        height: 600px;
+        margin-bottom: 20px;
+        float: left;
+        border: 1px solid #bcbcbc;
+      }
+      #jb-footer {
+        clear: both;
+        padding: 20px;
+      }
+    </style>
+    <body id="page-top">
+    	<div id="jb-header">
+			<!-- 상단바-->
+	        <th:block th:replace="layout/fragments/header :: header"></th:block>
+		</div>
+		<div id="jb-container">
+			
+			<div id="jb-content">
+				<!-- 본문-->
+				<th:block layout:fragment="content"></th:block>
+			</div>
+			<div id="jb-sidebar">
+				<th:block th:replace="/layout/fragments/side:: side"></th:block>
+			</div>
+			
+		</div>
+		<div id="jb-footer">
+			<!-- 공통 하단-->
+	        <th:block th:replace="layout/fragments/footer :: footer"></th:block>
+		</div>
+    </body>
+</html>

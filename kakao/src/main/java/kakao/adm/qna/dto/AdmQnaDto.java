@@ -2,13 +2,14 @@ package kakao.adm.qna.dto;
 
 import java.time.LocalDateTime;
 
-import kakao.qna.entity.Qna;
+import kakao.entity.Qna;
+import kakao.util.StringUtil;
 import lombok.Data;
 
 @Data
 public class AdmQnaDto {
 	
-	private int seq;
+	private String seq;
 	private String queEmail;
 	private String queTitle;
 	private String queContent;
@@ -23,8 +24,10 @@ public class AdmQnaDto {
 	private LocalDateTime upDate;
 	private String upUserId;
 	
+	public AdmQnaDto(){}
+	
 	public AdmQnaDto(Qna entity) {
-		this.seq = entity.getSeq();
+		this.seq = Integer.toString(entity.getSeq());
 		this.queEmail = entity.getQueEmail();
 		this.queTitle = entity.getQueTitle();
 		this.queContent = entity.getQueContent();
@@ -41,12 +44,23 @@ public class AdmQnaDto {
 	}
 	
 	public Qna toEntity() {
-		return Qna.builder()
-			.seq(seq)
-			.status(status)
-			.ansUserId(ansUserId)
-			.ansUserName(ansUserName)
-			.ansContent(ansContent)
-			.build();
+		
+		if(StringUtil.isEmpty(seq)) {
+			return Qna.builder()
+					.queEmail(queEmail)
+					.queTitle(queTitle)
+					.queContent(queContent)
+					.status(status)
+					.build();
+		}else {
+			return Qna.builder()
+					.seq(Integer.parseInt(seq))
+					.queEmail(queEmail)
+					.queTitle(queTitle)
+					.queContent(queContent)
+					.status(status)
+					.build();
+		}
+		
 	}
 }

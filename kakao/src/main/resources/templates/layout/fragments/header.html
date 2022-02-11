@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="header">
+	
+	<div style="width:40%; float:left;">
+		<a href="/">홈페이지 메인</a>
+	</div>
+    <div style="width:40%;float:right;text-align:right;padding-right:5%;">
+		
+		<div>
+			<span sec:authorize="isAuthenticated()" sec:authentication="name"></span>
+			<span style="padding-right: 30px;" sec:authorize="isAuthenticated()">님 환영합니다.</span>
+			<!-- 익명의 사용자 -->
+			<a sec:authorize="isAnonymous()" th:href="@{/login/login}">로그인</a>
+			<a sec:authorize="isAnonymous()" th:href="@{/adm/user/insert}">회원가입</a>
+			
+			<!-- 인증된 사용자 -->
+			<a sec:authorize="isAuthenticated()" th:href="@{/login/logout}">로그아웃</a>
+			
+		</div>
+</html>

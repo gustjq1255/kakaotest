@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import kakao.entity.Qna;
+import kakao.entity.QnaRepository;
 import kakao.qna.dto.QnaDto;
-import kakao.qna.entity.Qna;
-import kakao.qna.repository.QnaRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,7 +18,6 @@ public class QnaService {
 	
 	public QnaDto insert(QnaDto qnaDto) throws Exception {
 		
-		System.out.println(qnaDto.toEntity());
 		QnaDto data = new QnaDto(qnaRepository.save(qnaDto.toEntity()));
 		
 		return data;
@@ -35,7 +34,11 @@ public class QnaService {
 	
 	public QnaDto data(QnaDto qnaDto) throws Exception {
 		
-		QnaDto data = new QnaDto(qnaRepository.findBySeq(qnaDto.getSeq()));
+		QnaDto data = new QnaDto();
+		
+		Qna qna = qnaDto.getSeq() != null ? qnaRepository.findBySeq(Integer.parseInt(qnaDto.getSeq())) : null;
+		
+		if(qna != null) data = new QnaDto(qna);
 		
 		return data;
 	}

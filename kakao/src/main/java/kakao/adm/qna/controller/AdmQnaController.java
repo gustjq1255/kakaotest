@@ -24,7 +24,7 @@ public class AdmQnaController {
         	
         	List<AdmQnaDto> qnaList = admQnaService.list(admQnaDto);
         	
-            ModelAndView mv = new ModelAndView(suffix+"/qnaList");
+            ModelAndView mv = new ModelAndView(suffix+"/admQnaList");
             mv.addObject("qnaList", qnaList);
 
             return mv;
@@ -35,7 +35,7 @@ public class AdmQnaController {
         	
         	AdmQnaDto qnaData = admQnaService.data(admQnaDto);
         	
-        	ModelAndView mv = new ModelAndView(suffix+"/qnaView");
+        	ModelAndView mv = new ModelAndView(suffix+"/admQnaView");
         	mv.addObject("qnaData", qnaData);
             
             return mv;
@@ -46,7 +46,7 @@ public class AdmQnaController {
         	
         	AdmQnaDto qnaData = admQnaService.data(admQnaDto);
         	
-        	ModelAndView mv = new ModelAndView(suffix+"/qnaUpdate");
+        	ModelAndView mv = new ModelAndView(suffix+"/admQnaInsert");
             mv.addObject("qnaData", qnaData);
             
             return mv;
@@ -55,12 +55,8 @@ public class AdmQnaController {
         @PostMapping(suffix+"/insert")
         public String qnaInsert(AdmQnaDto admQnaDto) throws Exception {
         	
-        	System.out.println(admQnaDto.getQueContent());
-        	int result = 0;
-        	
         	admQnaService.insert(admQnaDto);
         	
-        	System.out.println("result : " + result);
-            return "redirect:/qna/list";
+            return "redirect:/adm/qna/list";
         }
 }

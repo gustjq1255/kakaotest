@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="layout/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>질문 등록</title>
+</head>
+
+<th:block layout:fragment="content">
+
+<script type="text/javascript">
+
+window.onload = function() {
+	
+	//목록 버튼 이벤트
+	var btnGoUserList = document.querySelector('#btnGoUserList'); 
+	btnGoUserList.addEventListener("click", function(e){
+			fn_goUserList();
+	});
+	
+	//수정 버튼 이벤트
+	var btnGoUserUpdate = document.querySelector('#btnGoUserUpdate'); 
+	btnGoUserUpdate.addEventListener("click", function(e){
+			fn_goUserUpdate();
+	});
+	
+}
+
+function fn_goUserList(){
+	var frm = document.querySelector('#frmUserView'); 
+	frm.action = "/adm/user/list";
+	frm.method = "GET";
+	frm.submit();
+}
+
+function fn_goUserUpdate(){
+	var frm = document.querySelector('#frmUserView'); 
+	frm.action = "/adm/user/insert";
+	frm.method = "GET";
+	frm.submit();
+}
+
+</script>
+
+<div class="container">
+    <h2>질문 보기</h2>
+    <form id="frmUserView" name="frmUserView">
+    	<input type="hidden" name="userId" th:value="${userData.userId}">
+        <table class="board_detail">
+        	<tr>
+                <td>사용자 ID</td>
+                <td th:text="${userData.userId}"></td>
+            </tr>
+            <tr>
+                <td>사용자 성명</td>
+                <td th:text="${userData.userNm}"></td>
+            </tr>
+            <tr>
+            	<td>권한명</td>
+                <td th:text="${userData.role}"></td>
+            </tr>
+            <tr>
+            	<td>등록 일시</td>
+                <td th:text="${#temporals.format(userData.inDate, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+        </table>
+        <button type="button" id="btnGoUserUpdate" class="btn">수정</button>
+        <button type="button" id="btnGoUserList" class="btn">목록</button>
+    </form>
+</div>
+	
+</th:block>
+</html>

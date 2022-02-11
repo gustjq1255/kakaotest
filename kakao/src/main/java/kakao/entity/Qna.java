@@ -1,4 +1,4 @@
-package kakao.qna.entity;
+package kakao.entity;
 
 import java.time.LocalDateTime;
 
@@ -8,15 +8,20 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
 public class Qna {
 	
 	@Id
@@ -32,7 +37,7 @@ public class Qna {
 	@Column(nullable=false)
 	private String queContent;
 	
-	@Column(nullable=false)
+	@Column
 	private LocalDateTime queDate = LocalDateTime.now();
 	
 	@Column(nullable=false)
@@ -44,26 +49,27 @@ public class Qna {
 	@Column
 	private String upUserId;
 	
-	@Column(nullable=false)
+	@Column
 	private String ansUserId;
 	
-	@Column(nullable=false)
+	@Column
 	private String ansUserName;
 	
-	@Column(nullable=false)
+	@Column
 	private String ansContent;
 	
-	@Column(nullable=false)
+	@Column
 	private LocalDateTime ansDate = LocalDateTime.now();
 	
-	@Column(nullable=false)
+	@Column(updatable=false)
 	private LocalDateTime inDate = LocalDateTime.now();
 	
-	@Column(nullable=false)
+	@Column(insertable=false)
 	private LocalDateTime upDate = LocalDateTime.now();
 	
 	@Builder
-	public Qna(int seq, String queEmail, String queTitle, String queContent, String status, String ansUserId, String ansUserName, String ansContent) {
+	public Qna(int seq, String queEmail, String queTitle, String queContent, String status, String ansUserId, String ansUserName, String ansContent
+				, LocalDateTime queDate, LocalDateTime ansDate, LocalDateTime inDate, LocalDateTime upDate ) {
 		this.seq = seq;
 		this.queEmail = queEmail;
 	    this.queTitle = queTitle;
@@ -72,6 +78,10 @@ public class Qna {
 	    this.ansUserId = ansUserId;
 	    this.ansUserName =ansUserName;
 	    this.ansContent = ansContent;
+	    this.queDate = queDate;
+	    this.ansDate = ansDate;
+	    this.inDate = inDate;
+	    this.upDate = upDate;
 	}
 }
 

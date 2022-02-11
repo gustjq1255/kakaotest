@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="layout/layout">
+	  
 <head>
     <meta charset="UTF-8">
     <title>질문 등록</title>
     <link rel="stylesheet" th:href="@{/css/style.css}" href="../../css/style.css"></link>
 </head>
+
+<th:block layout:fragment="content">
 
 <script type="text/javascript">
 
@@ -39,44 +43,44 @@ function fn_goQnaUpdate(){
 }
 </script>
 
-<body>
-    <div class="container">
-        <h2>질문 등록</h2>
-        <form id="frmQnaView" name="frm" method="get" action="/qna/insert">
-        	<input type="hidden" name="status" value="wait">
-        	<input type="hidden" name="seq" th:value="${qnaData.seq}">
-        	<input type="hidden" name="email" th:value="${qnaData.queEmail}">
-            <table class="board_detail">
-            	<colgroup>
-	                <col width="15%"/>
-	                <col width="35%"/>
-	                <col width="10%"/>
-	                <col width="24%"/>
-	                <col width="8%"/>
-	                <col width="8%"/>
-	            </colgroup>
-            	<tr>
-                    <td>이메일</td>
-                    <td th:text="${qnaData.queEmail}"></td>
-                    <td>등록 시간</td>
-                    <td th:text="${#temporals.format(qnaData.queDate, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td>상태</td>
-                    <td th:text="${qnaData.status}"></td>
-                </tr>
-                <tr>
-                    <td>제목</td>
-                    <td colspan="5" th:text="${qnaData.queTitle}"></td>
-                </tr>
-                <tr>
-                	<td>내용</td>
-                    <td colspan="5" >
-                    	<pre th:text="${qnaData.queContent}"></pre>
-                    </td>
-                </tr>
-            </table>
-            <button type="button" id="btnGoUpdate" class="btn">수정</button>
-            <button type="button" id="btnGoList" class="btn">목록</button>
-        </form>
-    </div>
-</body>
+<div class="container">
+    <h2>질문 등록</h2>
+    <form id="frmQnaView" name="frm" method="get" action="/qna/insert">
+    	<input type="hidden" name="status" value="wait">
+    	<input type="hidden" name="seq" th:value="${qnaData.seq}">
+    	<input type="hidden" name="email" th:value="${qnaData.queEmail}">
+        <table class="board_detail">
+        	<colgroup>
+                <col width="15%"/>
+                <col width="35%"/>
+                <col width="10%"/>
+                <col width="24%"/>
+                <col width="8%"/>
+                <col width="8%"/>
+            </colgroup>
+        	<tr>
+                <td>이메일</td>
+                <td th:text="${qnaData.queEmail}"></td>
+                <td>등록 시간</td>
+                <td th:text="${#temporals.format(qnaData.queDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>상태</td>
+                <td th:text="${qnaData.status}"></td>
+            </tr>
+            <tr>
+                <td>제목</td>
+                <td colspan="5" th:text="${qnaData.queTitle}"></td>
+            </tr>
+            <tr>
+            	<td>내용</td>
+                <td colspan="5" >
+                	<pre th:text="${qnaData.queContent}"></pre>
+                </td>
+            </tr>
+        </table>
+        <button type="button" id="btnGoUpdate" class="btn">수정</button>
+        <button type="button" id="btnGoList" class="btn">목록</button>
+    </form>
+</div>
+
+</th:block>
 </html>

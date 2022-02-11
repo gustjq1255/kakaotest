@@ -1,6 +1,7 @@
 package kakao.config.security.handler;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,14 +20,15 @@ public class AuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 		
 	    String msg = "아이디와 비밀번호를 확인해주세요";
-	
 	    if(exception instanceof UsernameNotFoundException) {
         	msg = "계정이 없습니다.";
         } else if(exception instanceof BadCredentialsException ) {
         	msg = "비밀번호가 다릅니다.";
         }
-	
-	    setDefaultFailureUrl("/login?error=true&exception=" + msg);
+	    
+	    //화면에 메시지를 뿌리기위한 UTF8 인코딩
+	    msg = URLEncoder.encode(msg, "UTF-8");
+	    setDefaultFailureUrl("/login/login?error=true&exception=" + msg);
 	
 	    super.onAuthenticationFailure(request, response, exception);
 	}

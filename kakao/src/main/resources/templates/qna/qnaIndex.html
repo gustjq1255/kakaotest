@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>내 질문 목록</title>
+    
+</head>
+<th:block layout:fragment="content">
+
+<script type="text/javascript">
+
+window.onload = function() {
+	var tableQnaTr = document.querySelectorAll('#tableQna tr'); 
+	[].forEach.call(tableQnaTr,function(tr){ 
+		tr.addEventListener("click", function(e){
+			var seq = tr.getAttribute('id');
+			location.href="/qna/view?seq="+seq;
+		});
+	}); 
+	
+}
+
+</script>
+<body>
+	
+<div class="container">
+    <h2>문의 하기</h2>
+    <a href="/qna/insert" class="btn">새 질문 등록</a>
+    <a href="/qna/sign" class="btn">내 질문 확인하기</a>
+</div>
+	
+</th:block>
+</html>
