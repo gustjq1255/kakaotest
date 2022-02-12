@@ -43,7 +43,7 @@ function fn_goUserUpdate(){
 </script>
 
 <div class="container">
-    <h2>질문 보기</h2>
+    <h2>사용자 조회</h2>
     <form id="frmUserView" name="frmUserView">
     	<input type="hidden" name="userId" th:value="${userData.userId}">
         <table class="board_detail">
@@ -64,6 +64,7 @@ function fn_goUserUpdate(){
                 <td th:text="${#temporals.format(userData.inDate, 'yyyy-MM-dd HH:mm')}"></td>
             </tr>
         </table>
+        
         <button type="button" id="btnGoUserUpdate" class="btn">수정</button>
         <button type="button" id="btnGoUserList" class="btn">목록</button>
     </form>

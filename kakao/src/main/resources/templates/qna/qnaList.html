@@ -49,9 +49,8 @@ window.onload = function() {
                 <td ><span th:text="${list.seq}"></span></td>
                 <td class="title"><span th:text="${list.queTitle}"></span></td>
                 <td>
-                	<span th:if="${list.status} == '100'">대기중</span>
-                	<span th:if="${list.status} == '200'">할당됨</span>
-                	<span th:if="${list.status} == '300'">답변완료</span>
+                	<span th:if="${list.getStatus().toString().equals('300')}">답변 완료</span>
+					<span th:unless="${list.getStatus().toString().equals('300')}">답변 대기중</span>
                 </td>
                 <td><span th:text="${#temporals.format(list.queDate, 'yyyy-MM-dd HH:mm')}"></span></td>
             </tr> 

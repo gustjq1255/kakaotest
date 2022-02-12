@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	  layout:decorate="layout/layout">
+
+<th:block layout:fragment="content">
+
+<script type="text/javascript">
+
+window.onload = function() {
+	
+	//저장 버튼 이벤트
+	var btnJoinSave = document.querySelector('#btnJoinSave'); 
+	btnJoinSave.addEventListener("click", function(e){
+		fn_saveUser();
+	});
+	
+	//ID 중복확인 버튼 이벤트
+	var btnCheckUserId = document.querySelector('#btnCheckUserId'); 
+	btnCheckUserId.addEventListener("click", function(e){
+		fn_checkUserId();
+	});
+	
+	//ID 값 수정시 다시 ID 중복요청 체크
+	var inputUserId = document.querySelector("#userId"); 
+	inputUserId.addEventListener("keydown", function(e){
+		document.querySelector("#btnCheckUserId").style.display = "";
+		document.querySelector("#checkUserId").value="";
+	});
+}
+
+function fn_saveUser(){
+	var frm = document.querySelector('#frmJoin'); 
+	
+	//ID 중복확인 체크
+	if(frm.querySelector("#checkUserId").value == ''){
+		alert("ID중복확인을 진행해주세요");
+		return;
+	}
+	
+	var errorElm = null; //필수값체크에 걸린 eliment
+	
+	//필수값 체크 beak기능을 쓰기위해 try catch 적용
+	try{
+		frm.querySelectorAll("input").forEach(function(elm){
+			if(elm.getAttribute("type") != "hidden" && elm.getAttribute("required") == "true"){
+				if(elm.value == ''){
+					errorElm = elm;
+					throw new Error("");
+				}
+			}
+		});
+	} catch(e) {
+		
+	}
+	
+	if(errorElm){
+		alert("필수값을 입력해주세요");
+		errorElm.focus();
+		
+		return;
+	} 
+	
+	var pwd1 = frm.querySelector("#pwd1").value;
+	var pwd2 = frm.querySelector("#pwd2").value;
+	
+	if(pwd1 === pwd2){
+		frm.querySelector("#pwd").value = pwd1;
+	}else{
+		alert("비밀번호가 서로 다릅니다");
+		return;
+	}
+	
+	frm.submit();
+}
+
+function fn_checkUserId(){
+	
+	var frm = document.querySelector('#frmJoin');
+	
+	var userId = frm.querySelector("#userId").value;
+	
+	if(userId.length < 5){
+		alert("아이디는 5자 이상 입력해주세요");
+		return;
+	}
+	var xhr = new XMLHttpRequest();
+	
+	//요청을 보낼 방식, 주소, 비동기여부 설정
+	xhr.open('GET', '/login/checkUserId?userId='+userId, true);
+	//요청 전송
+	xhr.send();
+	
+	//통신후 작업
+	xhr.onload = () => {
+		//통신 성공
+		if (xhr.status == 200) {
+			
+			if(JSON.parse(xhr.response).userCount > 0){
+				alert("이미 존재하는 아이디 입니다.");
+			}else{
+				frm.querySelector("#btnCheckUserId").style.display = "none";
+				frm.querySelector("#checkUserId").value="1";
+			}
+		} else {
+			//통신 실패
+			console.log("통신 실패");
+		}
+	}
+}
+
+</script>
+
+	
+<div class="container">
+    <h2>회원가입</h2>
+    <form id="frmJoin" name="frmJoin" action = "/login/join" method="POST">
+    	<input type="hidden" id="role" name="role" value="USER">
+    	<input type="hidden" id="checkUserId" value="">
+    	<input type="hidden" id="pwd" name="pwd" value="">
+        <table class="board_detail">
+        	<tr>
+                <td>ID</td>
+                <td>
+                	<input type="text" id="userId" name="userId" required="true"><button type="button" id="btnCheckUserId">중복확인</button>
+                	<span id="userIdMent" style="display: none;">완료</span>
+                </td>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td><input type="text" id="userNm" name="userNm" required="true"></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="password" id="pwd1" required="true"></td>
+            </tr>
+            <tr>
+                <td>비밀번호 확인</td>
+                <td><input type="password" id="pwd2" required="true"></td>
+            </tr>
+        </table>
+        <button type="button" id="btnJoinSave" class="btn">저장</button>
+    </form>
+</div>
+</th:block>
+
+</html>

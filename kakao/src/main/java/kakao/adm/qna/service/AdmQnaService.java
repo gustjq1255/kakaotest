@@ -18,14 +18,20 @@ public class AdmQnaService {
 	
 	public AdmQnaDto insert(AdmQnaDto admQnaDto) throws Exception {
 		
-		AdmQnaDto data = new AdmQnaDto(qnaRepository.save(admQnaDto.toEntity()));
+		AdmQnaDto data = new AdmQnaDto();
+		
+	    int result = admQnaDto.getSeq() != null ? qnaRepository.admUpdate(admQnaDto.toEntity()) : 0;
+	    
+	    if(result > 0) {
+			data = new AdmQnaDto(qnaRepository.findBySeq(Integer.parseInt(admQnaDto.getSeq())));
+		}
 		
 		return data;
 	}
 	
-	public List<AdmQnaDto> list(AdmQnaDto admQnaDto) throws Exception {
+	public List<AdmQnaDto> list(String userId) throws Exception {
 		
-		List<Qna> listEntity = qnaRepository.findAllByQueEmail(admQnaDto.getQueEmail());
+		List<Qna> listEntity = qnaRepository.admList(userId);
 		
 		List<AdmQnaDto> list = listEntity.stream().map(AdmQnaDto::new).collect(Collectors.toList());
 		

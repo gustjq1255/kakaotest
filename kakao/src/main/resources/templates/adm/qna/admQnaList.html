@@ -26,9 +26,10 @@ window.onload = function() {
 </script>
     
 <div class="container">
-    <h2>내 질문 목록</h2>
+    <h2>답변하기 목록</h2>
     <table class="board_list" id="tableQna">
         <colgroup>
+            <col width="10%"/>
             <col width="15%"/>
             <col width="*"/>
             <col width="15%"/>
@@ -37,6 +38,7 @@ window.onload = function() {
         <thead>
             <tr>
                 <th scope="col">질문 번호</th>
+                <th scope="col">질문자ID</th>
                 <th scope="col">제목</th>
                 <th scope="col">답변 여부</th>
                 <th scope="col">작성일</th>
@@ -45,11 +47,12 @@ window.onload = function() {
         <tbody>
             <tr th:if="${#lists.size(qnaList)} > 0" th:each="list : ${qnaList}" th:id="${list.seq}">
                 <td ><span th:text="${list.seq}"></span></td>
+                <td ><span th:text="${list.queUserId}"></span></td>
                 <td class="title"><span th:text="${list.queTitle}"></span></td>
                 <td>
-                	<span th:if="${list.status} == '100'">대기중</span>
-                	<span th:if="${list.status} == '200'">할당됨</span>
-                	<span th:if="${list.status} == '300'">답변완료</span>
+                	<span th:if="${list.getStatus().toString().equals('100')}">미할당</span>
+					<span th:if="${list.getStatus().toString().equals('200')}">할당됨</span>
+					<span th:if="${list.getStatus().toString().equals('300')}">답변완료</span>
                 </td>
                 <td><span th:text="${#temporals.format(list.queDate, 'yyyy-MM-dd HH:mm')}"></span></td>
             </tr> 

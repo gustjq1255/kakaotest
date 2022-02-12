@@ -25,7 +25,7 @@ public class QnaService {
 	
 	public List<QnaDto> list(QnaDto qnaDto) throws Exception {
 		
-		List<Qna> listEntity = qnaRepository.findAllByQueEmail(qnaDto.getQueEmail());
+		List<Qna> listEntity = qnaRepository.findAllByQueUserId(qnaDto.getQueUserId());
 		
 		List<QnaDto> list = listEntity.stream().map(QnaDto::new).collect(Collectors.toList());
 		
@@ -36,7 +36,7 @@ public class QnaService {
 		
 		QnaDto data = new QnaDto();
 		
-		Qna qna = qnaDto.getSeq() != null ? qnaRepository.findBySeq(Integer.parseInt(qnaDto.getSeq())) : null;
+		Qna qna = qnaDto.getSeq() != null ? qnaRepository.findBySeqAndQueUserId(Integer.parseInt(qnaDto.getSeq()), qnaDto.getQueUserId()) : null;
 		
 		if(qna != null) data = new QnaDto(qna);
 		

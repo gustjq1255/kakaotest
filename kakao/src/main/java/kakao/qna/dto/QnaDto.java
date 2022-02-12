@@ -10,7 +10,7 @@ import lombok.Data;
 public class QnaDto {
 	
 	private String seq;
-	private String queEmail;
+	private String queUserId;
 	private String queTitle;
 	private String queContent;
 	private LocalDateTime queDate = LocalDateTime.now();
@@ -28,13 +28,12 @@ public class QnaDto {
 	
 	public QnaDto(Qna entity) {
 		this.seq = Integer.toString(entity.getSeq());
-		this.queEmail = entity.getQueEmail();
+		this.queUserId = entity.getQueUserId();
 		this.queTitle = entity.getQueTitle();
 		this.queContent = entity.getQueContent();
 		this.queDate = entity.getQueDate();
 		this.status = entity.getStatus();
 		this.ansUserId = entity.getAnsUserId();
-		this.ansUserName = entity.getAnsUserName();
 		this.ansContent = entity.getAnsContent();
 		this.ansDate = entity.getAnsDate();
 		this.inDate = entity.getInDate();
@@ -47,7 +46,7 @@ public class QnaDto {
 		
 		if(StringUtil.isEmpty(seq)) {
 			return Qna.builder()
-					.queEmail(queEmail)
+					.queUserId(queUserId)
 					.queTitle(queTitle)
 					.queContent(queContent)
 					.status(status)
@@ -57,7 +56,7 @@ public class QnaDto {
 		}else {
 			return Qna.builder()
 					.seq(Integer.parseInt(seq))
-					.queEmail(queEmail)
+					.queUserId(queUserId)
 					.queTitle(queTitle)
 					.queContent(queContent)
 					.status(status)

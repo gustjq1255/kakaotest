@@ -47,8 +47,10 @@ function fn_goQnaUpdate(){
 function onload_qnaView(){
 	var frm = document.querySelector('#frmQnaView'); 
 	
-	if(frm.getElementById("status").value == 100){ //상태값이 100:대기중 이 아니면 실행
-		frm.getElementById("btnGoUpdate").hide();
+	if(frm.querySelector("#status").value == "100"){ //상태값이 100:대기중 이 아니면 실행
+		frm.querySelector("#btnGoUpdate").style.display = "";
+	} else if (frm.querySelector("#status").value == "300"){
+		frm.querySelector("#ansQnaTable").style.display = "";
 	}
 }
 </script>
@@ -56,9 +58,9 @@ function onload_qnaView(){
 <div class="container">
     <h2>질문 보기</h2>
     <form id="frmQnaView" name="frm" method="get" action="/qna/insert">
-    	<input type="hidden" id="status" th:value="${qnaData.status}">
-    	<input type="hidden" name="seq" th:value="${qnaData.seq}">
-    	<input type="hidden" name="email" th:value="${qnaData.queEmail}">
+    	<input type="hidden" id="status" th:value="${qnaData?.status}">
+    	<input type="hidden" name="seq" th:value="${qnaData?.seq}">
+    	<input type="hidden" name="queUserId" th:value="${qnaData?.queUserId}">
         <table class="board_detail">
         	<colgroup>
                 <col width="15%"/>
@@ -70,24 +72,50 @@ function onload_qnaView(){
             </colgroup>
         	<tr>
                 <td>이메일</td>
-                <td th:text="${qnaData.queEmail}"></td>
+                <td th:text="${qnaData?.queUserId}"></td>
                 <td>등록 시간</td>
-                <td th:text="${#temporals.format(qnaData.queDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${#temporals.format(qnaData?.queDate, 'yyyy-MM-dd HH:mm')}"></td>
                 <td>상태</td>
-                <td th:text="${qnaData.status}"></td>
+                <td th:if="${qnaData.seq}">
+                	<span th:if="${qnaData.getStatus().toString().equals('300')}">답변 완료</span>
+					<span th:unless="${qnaData.getStatus().toString().equals('300')}">답변 대기중</span>
+                </td>
             </tr>
             <tr>
                 <td>제목</td>
-                <td colspan="5" th:text="${qnaData.queTitle}"></td>
+                <td colspan="5" th:text="${qnaData?.queTitle}"></td>
             </tr>
             <tr>
             	<td>내용</td>
                 <td colspan="5" >
-                	<pre th:text="${qnaData.queContent}"></pre>
+                	<pre th:text="${qnaData?.queContent}"></pre>
                 </td>
             </tr>
         </table>
-        <button type="button" id="btnGoUpdate" class="btn">수정</button>
+        
+        <table class="board_detail" id="ansQnaTable" style="display:none">
+        	<colgroup>
+                <col width="15%"/>
+                <col width="35%"/>
+                <col width="15%"/>
+                <col width="35%"/>
+            </colgroup>
+        	<tr>
+                <td>상담사</td>
+                <td th:text="${qnaData.ansUserId}"></td>
+                <td>답변 일시</td>
+                <td>
+                	<span th:if="${qnaData?.status} == '300'" th:text="${#temporals.format(qnaData.ansDate, 'yyyy-MM-dd HH:mm')}"></span>
+                </td>
+            </tr>
+            <tr>
+            	<td>답변 내용</td>
+                <td colspan="3">
+                	<pre th:text="${qnaData.ansContent}"></pre>
+                </td>
+            </tr>
+        </table>
+        <button type="button" id="btnGoUpdate" class="btn" style="display: none;">수정</button>
         <button type="button" id="btnGoList" class="btn">목록</button>
     </form>
 </div>

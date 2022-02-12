@@ -2,6 +2,8 @@ package kakao.adm.qna.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +22,9 @@ public class AdmQnaController {
         final String suffix = "adm/qna";
 
         @GetMapping(suffix+"/list")
-        public ModelAndView qnalistPage(AdmQnaDto admQnaDto) throws Exception {
+        public ModelAndView qnalistPage(@AuthenticationPrincipal User userInfo, AdmQnaDto admQnaDto) throws Exception {
         	
-        	List<AdmQnaDto> qnaList = admQnaService.list(admQnaDto);
+        	List<AdmQnaDto> qnaList = admQnaService.list(userInfo.getUsername());
         	
             ModelAndView mv = new ModelAndView(suffix+"/admQnaList");
             mv.addObject("qnaList", qnaList);
@@ -42,7 +44,7 @@ public class AdmQnaController {
         }
         
         @GetMapping(suffix+"/insert")
-        public ModelAndView qnainsertPage(AdmQnaDto admQnaDto) throws Exception {
+        public ModelAndView qnainsertPage(@AuthenticationPrincipal User userInfo, AdmQnaDto admQnaDto) throws Exception {
         	
         	AdmQnaDto qnaData = admQnaService.data(admQnaDto);
         	
@@ -53,10 +55,13 @@ public class AdmQnaController {
         }
         
         @PostMapping(suffix+"/insert")
-        public String qnaInsert(AdmQnaDto admQnaDto) throws Exception {
+        public String qnaInsert(@AuthenticationPrincipal User userInfo, AdmQnaDto admQnaDto) throws Exception {
+        	
+        	//마지막업데이트ID
+        	admQnaDto.setUpUserId(userInfo.getUsername());
         	
         	admQnaService.insert(admQnaDto);
         	
-            return "redirect:/adm/qna/list";
+            return "redirect:/adm/qna/view?seq="+admQnaDto.getSeq();
         }
 }

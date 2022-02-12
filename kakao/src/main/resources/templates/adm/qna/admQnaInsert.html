@@ -37,6 +37,13 @@ function fn_goQnaList(){
 
 function fn_goQnaSave(){
 	var frm = document.querySelector('#frmQnaInsert'); 
+	
+	if(frm.querySelector("#ansContent").text == ''){
+		alert("답변 내용을 입력하세요");
+		return;
+	}
+	
+	frm.status.value = "300";  // 상태값 변경 300 : 답변 완료
 	frm.action = "/adm/qna/insert";
 	frm.method = "POST";
 	frm.submit();
@@ -44,25 +51,56 @@ function fn_goQnaSave(){
 </script>
 
 <div class="container">
-    <h2>질문 등록</h2>
+    <h2>답변하기 등록</h2>
     <form id="frmQnaInsert" name="frm" method="post" action="/qna/insert">
-    	<input type="hidden" name="status" value="wait">
-    	<input type="hidden" name="seq" th:value="${qnaData?.seq}">
+    
+    	<input type="hidden" name="status" th:value="${qnaData.status}">
+    	<input type="hidden" name="seq" th:value="${qnaData.seq}">
         <table class="board_detail">
+        	<colgroup>
+                <col width="15%"/>
+                <col width="35%"/>
+                <col width="10%"/>
+                <col width="24%"/>
+                <col width="8%"/>
+                <col width="8%"/>
+            </colgroup>
         	<tr>
-                <td>이메일</td>
+                <td>문의자 ID</td>
+                <td th:text="${qnaData.queUserId}"></td>
+                <td>등록 시간</td>
+                <td th:text="${#temporals.format(qnaData.queDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td>상태</td>
                 <td>
-                	<input type="text" th:if="${#strings.isEmpty(qnaData?.seq)} "id="queEmail" name="queEmail" th:value="${qnaData?.queEmail}">
-                	<input type="text" th:unless="${#strings.isEmpty(qnaData?.seq)} "id="queEmail" name="queEmail" th:value="${qnaData?.queEmail}" readonly="true">
+                	<span th:if="${qnaData.getStatus().toString().equals('100')}">미할당</span>
+					<span th:if="${qnaData.getStatus().toString().equals('200')}">할당됨</span>
+					<span th:if="${qnaData.getStatus().toString().equals('300')}">답변완료</span>
                 </td>
             </tr>
             <tr>
                 <td>제목</td>
-                <td><input type="text" id="queTitle" name="queTitle" th:value="${qnaData?.queTitle}"></td>
+                <td colspan="5" th:text="${qnaData.queTitle}"></td>
             </tr>
             <tr>
-                <td colspan="2">
-                    <textarea id="queContent" name="queContent" th:text="${qnaData?.queContent}"></textarea>
+            	<td>내용</td>
+                <td colspan="5" >
+                	<pre th:text="${qnaData.queContent}"></pre>
+                </td>
+            </tr>
+        </table>
+        
+        <table class="board_detail" id="ansQnaTable">
+        	<tr>
+                <td>상담사</td>
+                <td>
+                	<input type="text" th:if="${#strings.isEmpty(qnaData?.ansUserId)}" id="ansUserId" name="ansUserId" th:value="${#authentication.name}" required="true" readonly="true">
+                	<input type="text" th:unless="${#strings.isEmpty(qnaData?.ansUserId)}" id="ansUserId" name="ansUserId" th:value="${qnaData.ansUserId}" required="true" readonly="true">
+                </td>
+            </tr>
+            <tr>
+            	<td>답변 내용</td>
+                <td>
+                	<textarea id="ansContent" name="ansContent" th:text="${qnaData?.ansContent}"></textarea>
                 </td>
             </tr>
         </table>

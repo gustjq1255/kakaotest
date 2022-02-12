@@ -5,10 +5,11 @@
 
     <h2>고객 문의</h2>
 	<ul>
-		<li><a href="/qna/index">문의 하기</a></li>
-		<li sec:authorize="isAuthenticated()"><a href="/adm/qna/list">답변 하기</a></li>
+		<li><a href="/qna/list">문의 하기</a></li>
+		<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/adm/qna/list">답변 하기</a></li>
+		<li sec:authorize="hasRole('ROLE_ADMIN')"><a href="/adm/user/list">회원관리</a></li>
 		<li sec:authorize="isAnonymous()"><a href="/login/login">로그인</a></li>
-		<li sec:authorize="hasRole('ADMIN')"><a href="/adm/qna/list">회원관리</a></li>
+		<li sec:authorize="isAnonymous()"><a href="/login/join">회원가입</a></li>
 	</ul>
 
 </th:block>

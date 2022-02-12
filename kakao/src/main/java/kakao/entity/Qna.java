@@ -29,7 +29,7 @@ public class Qna {
 	private int seq;
 	
 	@Column(nullable=false)
-	private String queEmail;
+	private String queUserId;
 	
 	@Column(nullable=false)
 	private String queTitle;
@@ -53,9 +53,6 @@ public class Qna {
 	private String ansUserId;
 	
 	@Column
-	private String ansUserName;
-	
-	@Column
 	private String ansContent;
 	
 	@Column
@@ -68,20 +65,20 @@ public class Qna {
 	private LocalDateTime upDate = LocalDateTime.now();
 	
 	@Builder
-	public Qna(int seq, String queEmail, String queTitle, String queContent, String status, String ansUserId, String ansUserName, String ansContent
-				, LocalDateTime queDate, LocalDateTime ansDate, LocalDateTime inDate, LocalDateTime upDate ) {
+	public Qna(int seq, String queUserId, String queTitle, String queContent, String status, String ansUserId, String ansContent
+				, LocalDateTime queDate, LocalDateTime ansDate, LocalDateTime inDate, LocalDateTime upDate, String upUserId) {
 		this.seq = seq;
-		this.queEmail = queEmail;
+		this.queUserId = queUserId;
 	    this.queTitle = queTitle;
 	    this.queContent = queContent;
 	    this.status = status;
 	    this.ansUserId = ansUserId;
-	    this.ansUserName =ansUserName;
 	    this.ansContent = ansContent;
 	    this.queDate = queDate;
 	    this.ansDate = ansDate;
 	    this.inDate = inDate;
 	    this.upDate = upDate;
+	    this.upUserId = upUserId;
 	}
 }
 

@@ -2,6 +2,8 @@ package kakao.qna.controller;
 
 import java.util.List;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +24,6 @@ public class QnaController {
         @GetMapping(suffix+"/index")
         public ModelAndView qnaIndexPage(QnaDto qnaDto) throws Exception {
         	
-        	qnaDto.setQueEmail("gustjq1255@naver.com");
         	List<QnaDto> qnaList = qnaService.list(qnaDto);
         	
             ModelAndView mv = new ModelAndView(suffix+"/qnaIndex");
@@ -32,9 +33,10 @@ public class QnaController {
         }
         
         @GetMapping(suffix+"/list")
-        public ModelAndView qnalistPage(QnaDto qnaDto) throws Exception {
+        public ModelAndView qnalistPage(@AuthenticationPrincipal User userInfo, QnaDto qnaDto) throws Exception {
         	
-        	qnaDto.setQueEmail("gustjq1255@naver.com");
+        	//자기가 작성한 질문만 조회한다
+        	qnaDto.setQueUserId(userInfo.getUsername());
         	List<QnaDto> qnaList = qnaService.list(qnaDto);
         	
             ModelAndView mv = new ModelAndView(suffix+"/qnaList");
@@ -44,8 +46,10 @@ public class QnaController {
         }
         
         @GetMapping(suffix+"/view")
-        public ModelAndView qnaViewPage(QnaDto qnaDto) throws Exception {
+        public ModelAndView qnaViewPage(@AuthenticationPrincipal User userInfo, QnaDto qnaDto) throws Exception {
         	
+        	//자기가 작성한 질문만 조회한다
+        	qnaDto.setQueUserId(userInfo.getUsername());
         	QnaDto qnaData = qnaService.data(qnaDto);
         	
         	ModelAndView mv = new ModelAndView(suffix+"/qnaView");
@@ -71,7 +75,6 @@ public class QnaController {
         
         @PostMapping(suffix+"/insert")
         public String qnaInsert(QnaDto qnaDto) throws Exception {
-        	System.out.println("aaaaaa");
         	System.out.println(qnaDto.getQueContent());
         	int result = 0;
         	

@@ -41,9 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http.csrf().disable() // 사용안함, POST요청안됨 추가설정 필요
         	.authorizeRequests()
-			.antMatchers("/adm/user/**").permitAll() // 최초회원가입을 위한 설정 TEST용 
 			.antMatchers("/adm/**").hasRole("ADMIN") // ADMIN만 접근 허용
-			.antMatchers("/**").permitAll()
+			.antMatchers("/","/login/**").permitAll()
 			.anyRequest().authenticated()
 		.and()
 			.formLogin() // 로그인 설정
