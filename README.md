@@ -57,6 +57,8 @@ tasks.named('test') {
 5. h2 database를 설치하고 db명을 qna로 생성해준다. [다운경로](http://www.h2database.com/html/download.html)
 6. application.propertis의 spring.jpa.hibernate.ddl-auto=create옵션을 확인해준다.
 
+** 테스트시엔 url&port를 localhost:8080으로 고정해주시바랍니다 websocket연결시 필요 **
+
 ** 최초실행시엔 주석을풀어주고 이후엔 주석을 해준다. 테이블 CREATE, DROP **
 
 ```c
