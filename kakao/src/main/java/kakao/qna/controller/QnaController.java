@@ -72,7 +72,6 @@ public class QnaController {
         
         @PostMapping(suffix+"/insert")
         public String qnaInsert(QnaDto qnaDto) throws Exception {
-        	int result = 0;
         	
         	qnaService.insert(qnaDto);
         	

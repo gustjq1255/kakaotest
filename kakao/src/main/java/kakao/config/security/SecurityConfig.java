@@ -48,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.formLogin() // 로그인 설정
 			.loginPage("/login/login") // 로그인 화면
 			.loginProcessingUrl("/login/action") //로그인 처리 URL
-			.successHandler(authSucessHandler) // 성공핸들러
+//			.successHandler(authSucessHandler) // 성공핸들러
 			.failureHandler(authFailureHandler) // 실패핸들러
 		.and()
 			.logout()

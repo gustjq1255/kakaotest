@@ -1,7 +1,5 @@
 package kakao.login.controller;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import kakao.config.websoket.WebsocketClientEndpoint;
 import kakao.login.dto.LoginDto;
 import kakao.login.service.LoginService;
 import lombok.RequiredArgsConstructor;

@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 @DynamicUpdate
 public class Users implements UserDetails{
 	
+	private static final long serialVersionUID = -2777897054925977340L;
+
 	@Id
 	private String userId;
 	

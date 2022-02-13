@@ -23,6 +23,13 @@ window.onload = function() {
 		fn_saveUser();
 	});
 	
+	//ID 값 수정시 다시 ID 중복요청 체크
+	var inputUserId = document.querySelector("#userId"); 
+	inputUserId.addEventListener("keydown", function(e){
+		document.querySelector("#btnCheckUserId").style.display = "";
+		document.querySelector("#checkUserId").value="";
+	});
+	
 }
 
 function fn_goUserList(){
@@ -34,6 +41,12 @@ function fn_goUserList(){
 
 function fn_saveUser(){
 	var frm = document.querySelector('#frmUserInsert'); 
+	
+	//ID 중복확인 체크
+	if(frm.querySelector("#checkUserId").value == ''){
+		alert("ID중복확인을 진행해주세요");
+		return;
+	}
 	
 	var errorElm = null; //필수값체크에 걸린 eliment
 	
@@ -79,8 +92,44 @@ function onload_userInsert(){
 	if(frm.querySelector("#userId").value != ''){ //유저아이디 수정 화면일 경우 비밀번호는 필수값으로 넣지않는다.
 		frm.querySelector("#pwd1").removeAttribute("required");
 		frm.querySelector("#pwd2").removeAttribute("required");
+		frm.querySelector("#checkUserId").value="1";
 		
 		frm.action = "/adm/user/update";
+	}
+}
+
+function fn_checkUserId(){
+	
+	var frm = document.querySelector('#frmUserInsert');
+	
+	var userId = frm.querySelector("#userId").value;
+	
+	if(userId.length < 5){
+		alert("아이디는 5자 이상 입력해주세요");
+		return;
+	}
+	var xhr = new XMLHttpRequest();
+	
+	//요청을 보낼 방식, 주소, 비동기여부 설정
+	xhr.open('GET', '/login/checkUserId?userId='+userId, true);
+	//요청 전송
+	xhr.send();
+	
+	//통신후 작업
+	xhr.onload = () => {
+		//통신 성공
+		if (xhr.status == 200) {
+			
+			if(JSON.parse(xhr.response).userCount > 0){
+				alert("이미 존재하는 아이디 입니다.");
+			}else{
+				frm.querySelector("#btnCheckUserId").style.display = "none";
+				frm.querySelector("#checkUserId").value="1";
+			}
+		} else {
+			//통신 실패
+			console.log("통신 실패");
+		}
 	}
 }
 
@@ -91,12 +140,14 @@ function onload_userInsert(){
     <h2>사용자 등록</h2>
     <form id="frmUserInsert" name="frmUserInsert" action = "/adm/user/insert" method="POST">
     	<input type="hidden" name="pwd" id="pwd">
+    	<input type="hidden" id="checkUserId" value="">
         <table class="board_detail">
         	<tr>
                 <td>사용자 ID</td>
                 <td>
                 	<input type="text" th:if="${#strings.isEmpty(userData?.userId)} "id="userId" name="userId" th:value="${userData?.userId}" required="true">
                 	<input type="text" th:unless="${#strings.isEmpty(userData?.userId)} "id="userId" name="userId" th:value="${userData?.userId}" required="true" readonly="true">
+                	<button th:if="${#strings.isEmpty(userData?.userId)}" type="button" id="btnCheckUserId" onClick="javascript:fn_checkUserId();">중복확인</button>
                 </td>
             </tr>
             <tr>
