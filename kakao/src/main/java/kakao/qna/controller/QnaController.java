@@ -65,9 +65,6 @@ public class QnaController {
         	
         	ModelAndView mv = new ModelAndView(suffix+"/qnaInsert");
         	
-        	System.out.println("aaa seq : " + qnaData.getSeq());
-        	QnaDto bb = new QnaDto();
-        	System.out.println("bbbb seq : " + bb.getSeq());
             mv.addObject("qnaData", qnaData);
             
             return mv;
@@ -75,12 +72,10 @@ public class QnaController {
         
         @PostMapping(suffix+"/insert")
         public String qnaInsert(QnaDto qnaDto) throws Exception {
-        	System.out.println(qnaDto.getQueContent());
         	int result = 0;
         	
         	qnaService.insert(qnaDto);
         	
-        	System.out.println("result : " + result);
             return "redirect:/qna/list";
         }
 }

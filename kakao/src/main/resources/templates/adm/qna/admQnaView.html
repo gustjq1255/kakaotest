@@ -61,12 +61,36 @@ function fn_changeStatus(){
 	if (!confirm("본인을 상담사로 지정하시겠습니까?")) {
         return;
     } 
+    
 	var frm = document.querySelector('#frmQnaView');
-	
 	frm.status.value = "200";
-	frm.action = "/adm/qna/insert";
-	frm.method = "POST";
-	frm.submit();
+	
+	var xhr = new XMLHttpRequest();
+	
+	//요청을 보낼 방식, 주소, 비동기여부 설정
+	xhr.open('POST', '/adm/qna/updateToStatus', true);
+	
+	xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	//요청 전송
+	console.log(frm.seq.value);
+	xhr.send('status=200&seq='+parseFloat(frm.seq.value));
+	
+	//통신후 작업
+	xhr.onload = () => {
+		//통신 성공
+		if (xhr.status == 200) {
+			console.log(JSON.parse(xhr.response).result);
+			if(JSON.parse(xhr.response).result > 0){
+				alert("할당되었습니다.");
+				location.href = location.href;
+			}else{
+				alert("이미 할당된 질문입니다.");
+			}
+		} else {
+			//통신 실패
+			console.log("통신 실패");
+		}
+	}
 }
 
 function onload_qnaView(){
@@ -97,13 +121,13 @@ function onload_qnaView(){
 
 <div class="container">
     <h2>답변하기 조회</h2>
-    <form id="frmQnaView" name="frm" method="get" action="/qna/insert">
+    <form id="frmQnaView" name="frmQnaView" method="get" action="/qna/insert">
     
     	<button type="button" id="btnChangeStatus" class="btn" style="display:none">상담사 등록</button>
     	
     	<input type="hidden" id="ansUserId" name="ansUserId" th:value="${#authentication.name}">
     	<input type="hidden" name="status" id="status" th:value="${qnaData.status}">
-    	<input type="hidden" name="seq" th:value="${qnaData.seq}">
+    	<input type="hidden" name="seq" id="seq" th:value="${qnaData.seq}">
         <table class="board_detail">
         	<colgroup>
                 <col width="15%"/>

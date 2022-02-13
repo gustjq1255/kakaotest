@@ -1,12 +1,16 @@
 package kakao.adm.qna.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import kakao.adm.qna.dto.AdmQnaDto;
@@ -63,5 +67,28 @@ public class AdmQnaController {
         	admQnaService.insert(admQnaDto);
         	
             return "redirect:/adm/qna/view?seq="+admQnaDto.getSeq();
+        }
+        
+        @PostMapping(suffix+"/updateToStatus")
+        @ResponseBody
+        public Map<String,Object> updateToStatus(@AuthenticationPrincipal User userInfo, @RequestParam String seq, @RequestParam String status) throws Exception {
+        	
+        	Map<String,Object> resultMap = new HashMap<String, Object>();
+        	
+        	int result = 1;
+        	
+        	AdmQnaDto qnaData = admQnaService.data(seq);
+        	if(qnaData.getStatus().equals("100")) {
+        		//마지막업데이트ID
+            	qnaData.setUpUserId(userInfo.getUsername());
+            	qnaData.setStatus(status);
+        		resultMap.put("data", admQnaService.insert(qnaData));
+        	}else {
+        		result = 0;
+        	}
+        	
+        	resultMap.put("result", result);
+    		
+    		return resultMap;
         }
 }

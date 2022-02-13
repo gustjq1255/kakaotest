@@ -71,7 +71,7 @@ function onload_qnaView(){
                 <col width="8%"/>
             </colgroup>
         	<tr>
-                <td>이메일</td>
+                <td>작성자</td>
                 <td th:text="${qnaData?.queUserId}"></td>
                 <td>등록 시간</td>
                 <td th:text="${#temporals.format(qnaData?.queDate, 'yyyy-MM-dd HH:mm')}"></td>

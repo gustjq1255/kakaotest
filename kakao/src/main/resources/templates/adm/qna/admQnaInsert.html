@@ -52,7 +52,7 @@ function fn_goQnaSave(){
 
 <div class="container">
     <h2>답변하기 등록</h2>
-    <form id="frmQnaInsert" name="frm" method="post" action="/qna/insert">
+    <form id="frmQnaInsert" name="frmQnaInsert" method="post" action="/qna/insert">
     
     	<input type="hidden" name="status" th:value="${qnaData.status}">
     	<input type="hidden" name="seq" th:value="${qnaData.seq}">

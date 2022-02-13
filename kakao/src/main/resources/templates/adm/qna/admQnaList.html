@@ -12,57 +12,229 @@
 
 <script type="text/javascript">
 
+let webSocket;
+    
 window.onload = function() {
-	var tableQnaTr = document.querySelectorAll('#tableQna tr'); 
-	[].forEach.call(tableQnaTr,function(tr){ 
-		tr.addEventListener("click", function(e){
-			var seq = tr.getAttribute('id');
-			location.href="/adm/qna/view?seq="+seq;
-		});
-	}); 
+	
+	fn_websocketConnect();
 	
 }
 
+
+//******웹소켓 시작 *****
+function fn_websocketConnect(){
+	webSocket = new WebSocket("ws://localhost:8080/ws/qna");
+	webSocket.onopen = onOpen;
+	webSocket.onclose = onClose;
+	webSocket.onmessage = onMessage;
+	webSocket.onerror = function(e){
+  		console.log(e);
+  	}
+}
+function disconnect(){
+	webSocket.send("닫기");
+	webSocket.close();
+}
+
+function send(){
+}
+
+function onOpen(){
+}
+
+function onMessage(e){
+	var data = e.data;
+	
+	var jsonData = JSON.parse(data);
+	//리스트 업데이트
+	if(jsonData.seq != undefined){
+		console.log(jsonData);
+		fn_qnaListUpdate(jsonData);
+	}
+}
+
+function onClose(){
+
+}
+//******웹소켓 끝 *****
+
+function fn_qnaView(_elm){
+	location.href="/adm/qna/view?seq="+_elm.getAttribute("id");
+}
+
+// QnaTable 최신화 -- 소켓으로 응답을 받았을때 목록 최신화를 하기위함
+function fn_qnaListUpdate(_date){
+	
+	var tableQnaTr = document.querySelectorAll('#tableQna tr');
+	
+	var status = _date.status;
+	var ansUserId = _date.ansUserId;
+	var userId = document.querySelector("#userId").value;
+	
+	var mode = "insert"; //새로운 데이터 모드, insert, delete, update
+	console.log(ansUserId);
+	if(ansUserId != 'null' && ansUserId != userId){
+		console.log("aggg");
+		mode = "delete";
+	}
+	
+	if(mode == 'delete'){
+		tableQnaTr.forEach(function(_tr){
+			if(_tr.getAttribute('id') == _date.seq){
+				_tr.remove();
+			}
+		});
+	}else{
+		console.log("update mode");
+		var tableQnaBody = document.querySelector('#tableQna tbody');
+	
+		var tr = document.createElement('tr');
+	    tr.setAttribute("id", _date.seq);
+	    tr.setAttribute("onClick", "javascript:fn_qnaView(this);");
+	    
+	    var td1 = document.createElement('td'); //글번호
+	    td1.innerText = _date.seq;
+	    tr.insertAdjacentElement("beforeend", td1);
+	    
+	    var td2 = document.createElement('td'); //작성자ID
+	    td2.innerText = _date.queUserId;
+	    tr.insertAdjacentElement("beforeend", td2);
+	    
+	    var td3 = document.createElement('td'); //제목
+	    td3.setAttribute("class", "title");
+	    td3.innerText = _date.queTitle;
+	    tr.insertAdjacentElement("beforeend", td3);
+	    
+	    var td4 = document.createElement('td'); //상태값
+	    if(_date.status == '200'){
+			td4.innerText = "할당됨";
+		}else if(_date.status == '300'){
+			td4.innerText = "답변완료";
+		}else{
+			td4.innerText = "미할당";
+		}
+	    tr.insertAdjacentElement("beforeend", td4);
+	    
+	    var td5 = document.createElement('td'); //작성시간
+	    td5.innerText = _date.queDate;
+	    tr.insertAdjacentElement("beforeend", td5);
+	    
+	    var td6 = document.createElement('td'); //버튼
+	    
+	    if(_date.status == '100'){ //미할당인 경우
+			var btn = document.createElement('button');
+		    btn.setAttribute("type", "button");
+		    btn.setAttribute("onclick", "javascript:btnChangeStatus(this);event.cancelBubble=true");
+		    btn.setAttribute("class", "btn");
+		    btn.innerText = "등록";
+		    td6.insertAdjacentElement("beforeend", btn);
+		}
+	    tr.insertAdjacentElement("beforeend", td6);
+	    
+	    tableQnaTr.forEach(function(_tr){
+			console.log("update mode4");
+			if(_tr.getAttribute('id') == _date.seq){
+				mode = "update";
+				console.log("같은거 있음");
+				_tr.insertAdjacentElement("afterend", tr); // beforeend: 맨마지막에 추가,  afterbegin : 맨처음
+				_tr.remove();
+			}
+		});
+		
+		console.log(mode);
+	    if(mode == 'insert'){
+			tableQnaBody.insertAdjacentElement("afterbegin", tr); // beforeend: 맨마지막에 추가,  afterbegin : 맨처음	
+		}
+	    
+	}
+}
+
+//질문 할당하기
+function fn_changeStatus(_elm){
+	
+	var seq = _elm.parentNode.parentNode.getAttribute("id");
+
+
+	if (!confirm("본인을 상담사로 지정하시겠습니까?")) {
+        return;
+    } 
+    
+	var xhr = new XMLHttpRequest();
+	
+	//요청을 보낼 방식, 주소, 비동기여부 설정
+	xhr.open('POST', '/adm/qna/updateToStatus', true);
+	
+	xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	//요청 전송
+	xhr.send('status=200&seq='+parseFloat(seq));
+	
+	//통신후 작업
+	xhr.onload = () => {
+		//통신 성공
+		if (xhr.status == 200) {
+			console.log(JSON.parse(xhr.response).data);
+			if(JSON.parse(xhr.response).result > 0){
+				alert("할당되었습니다.");
+				location.href="/adm/qna/view?seq="+JSON.parse(xhr.response).data.seq;
+			}else{
+				alert("이미 할당된 질문입니다.");
+			}
+		} else {
+			//통신 실패
+			console.log("통신 실패");
+		}
+	}
+}
 </script>
     
 <div class="container">
     <h2>답변하기 목록</h2>
-    <table class="board_list" id="tableQna">
-        <colgroup>
-            <col width="10%"/>
-            <col width="15%"/>
-            <col width="*"/>
-            <col width="15%"/>
-            <col width="20%"/>
-        </colgroup>
-        <thead>
-            <tr>
-                <th scope="col">질문 번호</th>
-                <th scope="col">질문자ID</th>
-                <th scope="col">제목</th>
-                <th scope="col">답변 여부</th>
-                <th scope="col">작성일</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:if="${#lists.size(qnaList)} > 0" th:each="list : ${qnaList}" th:id="${list.seq}">
-                <td ><span th:text="${list.seq}"></span></td>
-                <td ><span th:text="${list.queUserId}"></span></td>
-                <td class="title"><span th:text="${list.queTitle}"></span></td>
-                <td>
-                	<span th:if="${list.getStatus().toString().equals('100')}">미할당</span>
-					<span th:if="${list.getStatus().toString().equals('200')}">할당됨</span>
-					<span th:if="${list.getStatus().toString().equals('300')}">답변완료</span>
-                </td>
-                <td><span th:text="${#temporals.format(list.queDate, 'yyyy-MM-dd HH:mm')}"></span></td>
-            </tr> 
-            <tr th:unless="${#lists.size(qnaList)} > 0">
-                <td colspan="4">조회된 결과가 없습니다.</td>
-            </tr>
-            
-        </tbody>
-    </table>
-    <a href="/qna/insert" class="btn">새 질문 등록</a>
+    <form id="frmQnaList" name="frmQnaList">
+    	<input type="hidden" id="userId" th:value="${#authentication.name}">
+    	<input type="hidden" id="asnUserId" name="asnUserId">
+    	<input type="hidden" id="status" name="status">
+    	
+	    <table class="board_list" id="tableQna">
+	        <colgroup>
+	            <col width="10%"/>
+	            <col width="15%"/>
+	            <col width="*"/>
+	            <col width="15%"/>
+	            <col width="20%"/>
+	            <col width="10%"/>
+	        </colgroup>
+	        <thead>
+	            <tr>
+	                <th scope="col">질문 번호</th>
+	                <th scope="col">질문자ID</th>
+	                <th scope="col">제목</th>
+	                <th scope="col">답변 여부</th>
+	                <th scope="col">작성일</th>
+	                <th scope="col">상담사 등록</th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            <tr th:if="${#lists.size(qnaList)} > 0" th:each="list : ${qnaList}" th:id="${list.seq}" onClick="javascript:fn_qnaView(this);">
+	                <td ><span th:text="${list.seq}"></span></td>
+	                <td ><span th:text="${list.queUserId}"></span></td>
+	                <td class="title"><span th:text="${list.queTitle}"></span></td>
+	                <td>
+	                	<span th:if="${list.getStatus().toString().equals('100')}">미할당</span>
+						<span th:if="${list.getStatus().toString().equals('200')}">할당됨</span>
+						<span th:if="${list.getStatus().toString().equals('300')}">답변완료</span>
+	                </td>
+	                <td><span th:text="${#temporals.format(list.queDate, 'yyyy-MM-dd HH:mm')}"></span></td>
+	                <td>
+	                	<button th:if="${list.getStatus().toString().equals('100')}" type="button" onclick="event.cancelBubble=true;javascript:fn_changeStatus(this);" id="btnChangeStatus" class="btn">등록</button>
+	                </td>
+	            </tr> 
+	            <tr th:unless="${#lists.size(qnaList)} > 0">
+	                <td colspan="4">조회된 결과가 없습니다.</td>
+	            </tr>
+	            
+	        </tbody>
+	    </table>
+    </form>
 </div>
 
 </th:block>

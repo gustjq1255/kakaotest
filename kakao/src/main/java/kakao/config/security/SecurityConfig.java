@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable() // 사용안함, POST요청안됨 추가설정 필요
         	.authorizeRequests()
 			.antMatchers("/adm/**").hasRole("ADMIN") // ADMIN만 접근 허용
-			.antMatchers("/","/login/**").permitAll()
+			.antMatchers("/","/login/**", "/ws/**").permitAll()
 			.anyRequest().authenticated()
 		.and()
 			.formLogin() // 로그인 설정
